@@ -1,2 +1,14 @@
 [2025-08-07 01:37:11] INFO: [45mServer started successfully on port 3000[49m
 [2025-08-07 01:37:11] INFO: Connected to PostgreSQL database
+[2025-08-07 12:05:24] INFO: [45mServer started successfully on port 3000[49m
+[2025-08-07 12:05:24] INFO: Connected to PostgreSQL database
+[2025-08-07 12:08:49] INFO: [45mServer started successfully on port 3000[49m
+[2025-08-07 12:08:49] INFO: Connected to PostgreSQL database
+[2025-08-07 12:19:55] INFO: [45mServer started successfully on port 3000[49m
+[2025-08-07 12:19:55] INFO: Connected to PostgreSQL database
+[2025-08-07 12:21:52] HTTP: ::1 - - [07/Aug/2025:09:21:52 +0000] "POST /auth/signin HTTP/1.1" 200 285 "-" "PostmanRuntime/7.45.0"
+[2025-08-07 12:22:10] HTTP: ::1 - - [07/Aug/2025:09:22:10 +0000] "GET /users HTTP/1.1" 200 382 "-" "PostmanRuntime/7.45.0"
+[2025-08-07 12:22:19] HTTP: ::1 - - [07/Aug/2025:09:22:19 +0000] "GET /users/1 HTTP/1.1" 200 192 "-" "PostmanRuntime/7.45.0"
+[2025-08-07 12:22:22] HTTP: ::1 - - [07/Aug/2025:09:22:22 +0000] "GET /users/1 HTTP/1.1" 200 192 "-" "PostmanRuntime/7.45.0"
+[2025-08-07 12:22:25] HTTP: ::1 - - [07/Aug/2025:09:22:25 +0000] "GET /users/1 HTTP/1.1" 200 192 "-" "PostmanRuntime/7.45.0"
+[2025-08-07 12:22:26] HTTP: ::1 - - [07/Aug/2025:09:22:26 +0000] "GET /users/1 HTTP/1.1" 200 192 "-" "PostmanRuntime/7.45.0"

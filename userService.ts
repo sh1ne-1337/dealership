@@ -1,5 +1,6 @@
 import { User, UserCreationAttrs } from "./user";
 import { NotFoundError } from "./errors";
+import redis from "./redisClient";
 import bcrypt from "bcrypt";
 
 export const UserService = {
@@ -8,8 +9,16 @@ export const UserService = {
 	},
 
 	async getById(id: number) {
+		const cacheKey = `user:${id}`;
+
+		const cached = await redis.get(cacheKey);
+		if (cached) return JSON.parse(cached);
+
 		const user = await User.findByPk(id);
 		if (!user) throw new NotFoundError(`User with id ${id} not found`);
+
+		await redis.set(cacheKey, JSON.stringify(user), "EX", 3600);
+
 		return user;
 	},
 
@@ -21,7 +30,11 @@ export const UserService = {
 			data.password = await bcrypt.hash(data.password, 10);
 		}
 
-		return user.update(data);
+		const updatedUser = await user.update(data);
+
+		await redis.del(`user:${id}`);
+
+		return updatedUser;
 	},
 
 	async delete(id: number) {
@@ -29,6 +42,9 @@ export const UserService = {
 		if (!user) throw new NotFoundError(`User with id ${id} not found`);
 
 		await user.destroy();
+
+		await redis.del(`user:${id}`);
+
 		return user;
 	},
 };

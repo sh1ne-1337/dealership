@@ -22,21 +22,27 @@ export const UserController = {
 		}
 	},
 
-	async update(req: Request, res: Response): Promise<void> {
+	async update(req: Request, res: Response) {
 		try {
-			const updated = await UserService.update(Number(req.params.id), req.body);
-			res.status(STATUS_CODES.OK).json(updated);
+			const id = Number(req.params.id);
+			const updatedUser = await UserService.update(id, req.body);
+			res.status(STATUS_CODES.OK).json(updatedUser);
 		} catch (error) {
-			handleError(error, res);
+			const errorMessage =
+				error instanceof Error ? error.message : String(error);
+			res.status(STATUS_CODES.BAD_REQUEST).json({ message: errorMessage });
 		}
 	},
 
-	async delete(req: Request, res: Response): Promise<void> {
+	async delete(req: Request, res: Response) {
 		try {
-			const deleted = await UserService.delete(Number(req.params.id));
-			res.status(STATUS_CODES.OK).json({ message: "Deleted", user: deleted });
+			const id = Number(req.params.id);
+			const deletedUser = await UserService.delete(id);
+			res.status(STATUS_CODES.OK).json({ message: "User deleted", user: deletedUser });
 		} catch (error) {
-			handleError(error, res);
+			const errorMessage =
+				error instanceof Error ? error.message : String(error);
+			res.status(STATUS_CODES.BAD_REQUEST).json({ message: errorMessage });
 		}
 	},
 };
