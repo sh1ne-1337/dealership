@@ -21,21 +21,28 @@ app.use(
 	}),
 );
 
-sequelize
-	.authenticate()
-	.then(() => {
+(async () => {
+	try {
+		await sequelize.authenticate();
 		logger.info("Connected to PostgreSQL database");
-		return sequelize.sync();
-	})
-	.catch((err) => {
+
+		await sequelize.query("CREATE SCHEMA IF NOT EXISTS cardealership;");
+		logger.info("Schema 'cardealership' ensured");
+
+		await sequelize.sync();
+		logger.info("Database synced");
+
+		app.use("/", routes);
+
+		app.listen(process.env.PORT, () => {
+			logger.info(
+				chalk.bgMagenta(
+					`Server started successfully on port ${process.env.PORT}`,
+				),
+			);
+		});
+	} catch (err) {
 		logger.error("Error connecting:", err);
 		process.exit(1);
-	});
-
-app.use("/", routes);
-
-app.listen(process.env.PORT, () => {
-	logger.info(
-		chalk.bgMagenta(`Server started successfully on port ${process.env.PORT}`),
-	);
-});
+	}
+})();

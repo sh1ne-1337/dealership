@@ -38,7 +38,9 @@ export const UserController = {
 		try {
 			const id = Number(req.params.id);
 			const deletedUser = await UserService.delete(id);
-			res.status(STATUS_CODES.OK).json({ message: "User deleted", user: deletedUser });
+			res
+				.status(STATUS_CODES.OK)
+				.json({ message: "User deleted", user: deletedUser });
 		} catch (error) {
 			const errorMessage =
 				error instanceof Error ? error.message : String(error);

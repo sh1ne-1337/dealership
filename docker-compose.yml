@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DB_USER=postgres
+      - DB_PASSWORD=611611
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DATABASE=postgresTS
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SECRET=echo
+      - ACCESS_TOKEN_EXPIRATION=15m
+      - REFRESH_TOKEN_EXPIRATION=7d
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 611611
+      POSTGRES_DB: postgresTS
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+
+volumes:
+  pgdata:
