@@ -1,4 +1,3 @@
-# Візьмемо легкий Node.js образ
 FROM node:18-alpine
 
 WORKDIR /app
