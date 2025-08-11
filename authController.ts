@@ -66,7 +66,7 @@ export const signIn = async (req: Request, res: Response) => {
 			},
 		);
 
-		if (users.length === 0) {
+		if (!users) {
 			return res
 				.status(STATUS_CODES.UNAUTHORIZED)
 				.json({ message: "Invalid email or password" });
