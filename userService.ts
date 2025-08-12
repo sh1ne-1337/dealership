@@ -4,11 +4,11 @@ import redis from "./redisClient";
 import bcrypt from "bcrypt";
 
 export const UserService = {
-	async getAll() {
+	async getAllUsers() {
 		return User.findAll();
 	},
 
-	async getById(id: number) {
+	async getUserById(id: number) {
 		const cacheKey = `user:${id}`;
 
 		const cached = await redis.get(cacheKey);
@@ -22,7 +22,7 @@ export const UserService = {
 		return user;
 	},
 
-	async update(id: number, data: Partial<UserCreationAttrs>) {
+	async updateUser(id: number, data: Partial<UserCreationAttrs>) {
 		const user = await User.findByPk(id);
 		if (!user) throw new NotFoundError(`User with id ${id} not found`);
 
@@ -37,7 +37,7 @@ export const UserService = {
 		return updatedUser;
 	},
 
-	async delete(id: number) {
+	async deleteUser(id: number) {
 		const user = await User.findByPk(id);
 		if (!user) throw new NotFoundError(`User with id ${id} not found`);
 

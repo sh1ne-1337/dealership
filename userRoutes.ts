@@ -7,25 +7,30 @@ import { authorize } from "./authorize";
 
 const router = express.Router();
 
-router.get("/", authenticateToken, authorize("admin"), UserController.getAll);
+router.get(
+	"/",
+	authenticateToken,
+	authorize("admin", "manager"),
+	UserController.getAllUsers,
+);
 router.get(
 	"/:id",
 	authenticateToken,
-	authorize("admin"),
-	UserController.getById,
+	authorize("admin", "manager"),
+	UserController.getUserById,
 );
 router.put(
 	"/:id",
 	authenticateToken,
 	authorize("admin"),
 	validate(createUserSchema),
-	UserController.update,
+	UserController.updateUser,
 );
 router.delete(
 	"/:id",
 	authenticateToken,
 	authorize("admin"),
-	UserController.delete,
+	UserController.deleteUser,
 );
 
 export default router;

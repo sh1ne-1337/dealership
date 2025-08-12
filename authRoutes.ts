@@ -1,10 +1,10 @@
 import express from "express";
-import { signup, signin, refresh, logout } from "./authController";
+import { signUp, signIn, refresh, logout } from "./authController";
 
 const router = express.Router();
 
-router.post("/signup", signup);
-router.post("/signin", signin);
+router.post("/signup", signUp);
+router.post("/signin", signIn);
 router.post("/refresh", refresh);
 router.post("/logout", logout);
 

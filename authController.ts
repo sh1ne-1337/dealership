@@ -20,7 +20,7 @@ interface User {
 	role: string;
 }
 
-export const signup = async (req: Request, res: Response) => {
+export const signUp = async (req: Request, res: Response) => {
 	const { name, surname, email, phone, password, role } = req.body;
 	try {
 		const hashedPassword = await bcrypt.hash(password, 10);
@@ -55,7 +55,7 @@ export const signup = async (req: Request, res: Response) => {
 	}
 };
 
-export const signin = async (req: Request, res: Response) => {
+export const signIn = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
 	try {
 		const users = await sequelize.query<User>(
@@ -65,12 +65,6 @@ export const signin = async (req: Request, res: Response) => {
 				type: QueryTypes.SELECT,
 			},
 		);
-
-		if (users.length === 0) {
-			return res
-				.status(STATUS_CODES.UNAUTHORIZED)
-				.json({ message: "Invalid email or password" });
-		}
 
 		const user = users[0];
 		if (!user) {

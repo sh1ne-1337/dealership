@@ -1,0 +1,5 @@
+[2025-08-11 12:54:08] ERROR: Error connecting: getaddrinfo ENOTFOUND db
+[2025-08-11 13:03:20] ERROR: Reached the max retries per request limit (which is 20). Refer to "maxRetriesPerRequest" option for details.
+[2025-08-11 13:04:02] ERROR: Reached the max retries per request limit (which is 20). Refer to "maxRetriesPerRequest" option for details.
+[2025-08-11 13:04:02] ERROR: Reached the max retries per request limit (which is 20). Refer to "maxRetriesPerRequest" option for details.
+[2025-08-11 13:11:11] ERROR: Reached the max retries per request limit (which is 20). Refer to "maxRetriesPerRequest" option for details.

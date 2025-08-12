@@ -6,12 +6,14 @@ import { sequelize } from "./db";
 import chalk from "chalk";
 import logger from "./logger";
 import routes from "./routes";
+import { setupSwagger } from "./swagger";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+setupSwagger(app);
 
 app.use(
 	morgan("combined", {
