@@ -1,4 +1,4 @@
-import { STATUS_CODES } from "./statusCode";
+import { STATUS_CODES } from "../config/statusCode";
 
 export class NotFoundError extends Error {
 	status: number;

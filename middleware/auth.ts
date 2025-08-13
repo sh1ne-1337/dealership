@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
-import { STATUS_CODES } from "./statusCode";
+import { STATUS_CODES } from "../config/statusCode";
 import { Request, Response, NextFunction } from "express";
 
 dotenv.config();

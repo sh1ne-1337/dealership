@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { STATUS_CODES } from "./statusCode";
+import { STATUS_CODES } from "../config/statusCode";
 import logger from "./logger";
 
 interface ErrorWithStatus extends Error {

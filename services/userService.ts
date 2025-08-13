@@ -1,6 +1,6 @@
-import { User, UserCreationAttrs } from "./user";
-import { NotFoundError } from "./errors";
-import redis from "./redisClient";
+import { User, UserCreationAttrs } from "../models/user";
+import { NotFoundError } from "../errors/errors";
+import redis from "../db/redisClient";
 import bcrypt from "bcrypt";
 
 export const UserService = {

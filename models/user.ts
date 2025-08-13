@@ -4,7 +4,7 @@ import {
 	InferCreationAttributes,
 	CreationOptional,
 } from "sequelize";
-import { sequelize } from "./db";
+import { sequelize } from "../db/db";
 
 export class User extends Model {
 	declare id: CreationOptional<number>;

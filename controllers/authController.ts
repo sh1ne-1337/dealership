@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { authService } from "./authService";
-import { STATUS_CODES } from "./statusCode";
-import { handleError } from "./handleError";
+import { authService } from "../services/authService";
+import { STATUS_CODES } from "../config/statusCode";
+import { handleError } from "../utils/handleError";
 
 export const authController = {
 	async signUp(req: Request, res: Response): Promise<void> {

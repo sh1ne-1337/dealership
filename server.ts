@@ -2,11 +2,11 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-import { sequelize } from "./db";
+import { sequelize } from "./db/db";
 import chalk from "chalk";
-import logger from "./logger";
-import routes from "./routes";
-import { setupSwagger } from "./swagger";
+import logger from "./utils/logger";
+import routes from "./routes/routes";
+import { setupSwagger } from "./config/swagger";
 
 dotenv.config();
 

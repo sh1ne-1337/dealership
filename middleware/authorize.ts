@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { STATUS_CODES } from "./statusCode";
+import { STATUS_CODES } from "../config/statusCode";
 
 interface AuthenticatedRequest extends Request {
 	user?: {

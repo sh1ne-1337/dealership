@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { UserService } from "./userService";
-import { STATUS_CODES } from "./statusCode";
-import { handleError } from "./handleError";
+import { UserService } from "../services/userService";
+import { STATUS_CODES } from "../config/statusCode";
+import { handleError } from "../utils/handleError";
 
 export const UserController = {
 	async getAllUsers(req: Request, res: Response): Promise<void> {

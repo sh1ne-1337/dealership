@@ -1,9 +1,9 @@
 import express from "express";
-import { UserController } from "./userController";
-import { validate } from "./validation";
-import { createUserSchema } from "./userSchema";
-import { authenticateToken } from "./auth";
-import { authorize } from "./authorize";
+import { UserController } from "../controllers/userController";
+import { validate } from "../middleware/validation";
+import { createUserSchema } from "../schemas/userSchema";
+import { authenticateToken } from "../middleware/auth";
+import { authorize } from "../middleware/authorize";
 
 const router = express.Router();
 
