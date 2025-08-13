@@ -22,7 +22,6 @@ services:
 
   db:
     image: postgres:16
-    restart: always
     container_name: postgres
     ports:
       - "5433:5432"
