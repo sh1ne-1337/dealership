@@ -1,5 +1,5 @@
 import express from "express";
-import { signUp, signIn, refresh, logout } from "./authController";
+import { authController } from "./authController";
 
 const router = express.Router();
 
@@ -49,7 +49,7 @@ const router = express.Router();
  *       500:
  *         description: Внутрішня помилка сервера
  */
-router.post("/signup", signUp);
+router.post("/signup", authController.signUp);
 
 /**
  * @swagger
@@ -102,7 +102,7 @@ router.post("/signup", signUp);
  *       401:
  *         description: Невірні облікові дані
  */
-router.post("/signin", signIn);
+router.post("/signin", authController.signIn);
 
 /**
  * @swagger
@@ -126,7 +126,7 @@ router.post("/signin", signIn);
  *       500:
  *         description: Помилка при оновленні токена
  */
-router.post("/refresh", refresh);
+router.post("/refresh", authController.refresh);
 
 /**
  * @swagger
@@ -140,6 +140,6 @@ router.post("/refresh", refresh);
  *       400:
  *         description: Відсутній refresh токен
  */
-router.post("/logout", logout);
+router.post("/logout", authController.logout);
 
 export default router;

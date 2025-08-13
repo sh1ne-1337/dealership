@@ -35,7 +35,7 @@ export function authenticateToken(
 		const decoded = jwt.verify(token, SECRET as string) as JwtUserPayload;
 		req.user = decoded;
 		next();
-	} catch (err) {
+	} catch {
 		return res
 			.status(STATUS_CODES.FORBIDDEN)
 			.json({ message: "Invalid or expired token" });

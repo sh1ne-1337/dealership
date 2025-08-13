@@ -3,3 +3,7 @@
 [2025-08-11 13:04:02] ERROR: Reached the max retries per request limit (which is 20). Refer to "maxRetriesPerRequest" option for details.
 [2025-08-11 13:04:02] ERROR: Reached the max retries per request limit (which is 20). Refer to "maxRetriesPerRequest" option for details.
 [2025-08-11 13:11:11] ERROR: Reached the max retries per request limit (which is 20). Refer to "maxRetriesPerRequest" option for details.
+[2025-08-13 17:08:15] ERROR: data and hash arguments required
+[2025-08-13 22:47:25] ERROR: data and hash arguments required
+[2025-08-13 22:49:14] ERROR: data and hash arguments required
+[2025-08-13 22:56:04] ERROR: User with id 13 not found

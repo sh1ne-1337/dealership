@@ -7,13 +7,13 @@ import {
 import { sequelize } from "./db";
 
 export class User extends Model {
-	public id!: CreationOptional<number>;
-	public name!: string;
-	public surname!: string;
-	public email!: string;
-	public phone!: string;
-	public password!: string;
-	public role!: "customer" | "admin" | "manager";
+	declare id: CreationOptional<number>;
+	declare name: string;
+	declare surname: string;
+	declare email: string;
+	declare phone: string;
+	declare password: string;
+	declare role: "customer" | "admin" | "manager";
 }
 export type UserCreationAttrs = Omit<InferCreationAttributes<User>, "id">;
 

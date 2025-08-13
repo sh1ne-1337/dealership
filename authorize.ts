@@ -4,7 +4,7 @@ import { STATUS_CODES } from "./statusCode";
 interface AuthenticatedRequest extends Request {
 	user?: {
 		role?: string;
-		[key: string]: any;
+		[key: string]: string | undefined;
 	};
 }
 

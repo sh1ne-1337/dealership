@@ -1,168 +1,101 @@
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
-import { QueryTypes } from "sequelize";
-import { sequelize } from "./db";
-import dotenv from "dotenv";
+import { authService } from "./authService";
 import { STATUS_CODES } from "./statusCode";
+import { handleError } from "./handleError";
 
-dotenv.config();
+export const authController = {
+	async signUp(req: Request, res: Response): Promise<void> {
+		try {
+			const user = await authService.createUser(req.body);
 
-const SECRET = process.env.SECRET!;
+			if (!user) {
+				res
+					.status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+					.json({ error: "Failed to create user" });
+				return;
+			}
 
-interface User {
-	id: number;
-	name: string;
-	surname: string;
-	email: string;
-	phone: string;
-	password: string;
-	role: string;
-}
-
-export const signUp = async (req: Request, res: Response) => {
-	const { name, surname, email, phone, password, role } = req.body;
-	try {
-		const hashedPassword = await bcrypt.hash(password, 10);
-
-		const users = await sequelize.query<User>(
-			`INSERT INTO cardealership.users (name, surname, email, phone, password, role)
-       VALUES (:name, :surname, :email, :phone, :password, :role)
-       RETURNING *`,
-			{
-				replacements: {
-					name,
-					surname,
-					email,
-					phone,
-					password: hashedPassword,
-					role,
-				},
-				type: QueryTypes.SELECT,
-			},
-		);
-
-		const user = users[0];
-
-		if (!user)
-			return res
-				.status(STATUS_CODES.INTERNAL_SERVER_ERROR)
-				.json({ error: "Failed to create user" });
-
-		res.status(STATUS_CODES.CREATED).json(user);
-	} catch (err: any) {
-		res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: err.message });
-	}
-};
-
-export const signIn = async (req: Request, res: Response) => {
-	const { email, password } = req.body;
-	try {
-		const users = await sequelize.query<User>(
-			"SELECT * FROM cardealership.users WHERE email = :email",
-			{
-				replacements: { email },
-				type: QueryTypes.SELECT,
-			},
-		);
-
-		const user = users[0];
-		if (!user) {
-			return res
-				.status(STATUS_CODES.UNAUTHORIZED)
-				.json({ message: "Invalid email or password" });
+			res.status(STATUS_CODES.CREATED).json(user);
+		} catch (error) {
+			handleError(error, res);
 		}
+	},
 
-		const isMatch = await bcrypt.compare(password, user.password);
-		if (!isMatch) {
-			return res
-				.status(STATUS_CODES.UNAUTHORIZED)
-				.json({ message: "Invalid email or password" });
-		}
+	async signIn(req: Request, res: Response): Promise<void> {
+		try {
+			const { email, password } = req.body;
+			const user = await authService.validateUser(email, password);
 
-		const accessToken = jwt.sign(
-			{ id: user.id, email: user.email, role: user.role },
-			SECRET,
-			{
-				expiresIn: process.env
-					.ACCESS_TOKEN_EXPIRATION as `${number}${"m" | "h" | "d" | "s"}`,
-			},
-		);
+			if (!user) {
+				res
+					.status(STATUS_CODES.UNAUTHORIZED)
+					.json({ message: "Invalid email or password" });
+				return;
+			}
 
-		const refreshToken = jwt.sign(
-			{ id: user.id, email: user.email, role: user.role },
-			SECRET,
-			{
-				expiresIn: process.env
-					.REFRESH_TOKEN_EXPIRATION as `${number}${"m" | "h" | "d" | "s"}`,
-			},
-		);
-
-		res.cookie("refreshToken", refreshToken, {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			sameSite: "strict",
-			maxAge: 7 * 24 * 60 * 60 * 1000,
-		});
-
-		res.status(STATUS_CODES.OK).json({
-			message: "Success",
-			user: {
+			const { accessToken, refreshToken } = authService.generateTokens({
 				id: user.id,
 				email: user.email,
 				role: user.role,
-			},
-			accessToken,
-		});
-	} catch (err: any) {
-		res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: err.message });
-	}
-};
+			});
 
-export const refresh = async (req: Request, res: Response) => {
-	const refreshToken = req.cookies?.refreshToken;
-	if (!refreshToken)
-		return res
-			.status(STATUS_CODES.UNAUTHORIZED)
-			.json({ message: "No refresh token provided" });
+			res.cookie("refreshToken", refreshToken, {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === "production",
+				sameSite: "strict",
+				maxAge: 7 * 24 * 60 * 60 * 1000,
+			});
 
-	try {
-		const decoded = jwt.verify(refreshToken, SECRET) as {
-			id: number;
-			email: string;
-			role: string;
-		};
-		const accessToken = jwt.sign(
-			{ id: decoded.id, email: decoded.email, role: decoded.role },
-			SECRET,
-			{
-				expiresIn: process.env
-					.ACCESS_TOKEN_EXPIRATION as `${number}${"m" | "h" | "d" | "s"}`,
-			},
-		);
+			res.status(STATUS_CODES.OK).json({
+				message: "Success",
+				user: { id: user.id, email: user.email, role: user.role },
+				accessToken,
+			});
+		} catch (error) {
+			handleError(error, res);
+		}
+	},
 
-		res.json({ accessToken });
-	} catch (err: any) {
-		res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: err.message });
-	}
-};
+	async refresh(req: Request, res: Response): Promise<void> {
+		const token = req.cookies?.refreshToken;
 
-export const logout = async (req: Request, res: Response) => {
-	const refreshToken = req.cookies?.refreshToken;
-	if (!refreshToken)
-		return res
-			.status(STATUS_CODES.BAD_REQUEST)
-			.json({ message: "No refresh token provided" });
+		if (!token) {
+			res
+				.status(STATUS_CODES.UNAUTHORIZED)
+				.json({ message: "No refresh token provided" });
+			return;
+		}
 
-	try {
-		res.clearCookie("refreshToken", {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			sameSite: "strict",
-		});
+		try {
+			const decoded = authService.verifyRefreshToken(token);
+			const accessToken = authService.generateTokens(decoded).accessToken;
 
-		res.json({ message: "Logged out successfully" });
-	} catch (err: any) {
-		res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: err.message });
-	}
+			res.status(STATUS_CODES.OK).json({ accessToken });
+		} catch (error) {
+			handleError(error, res);
+		}
+	},
+
+	async logout(req: Request, res: Response): Promise<void> {
+		const token = req.cookies?.refreshToken;
+
+		if (!token) {
+			res
+				.status(STATUS_CODES.BAD_REQUEST)
+				.json({ message: "No refresh token provided" });
+			return;
+		}
+
+		try {
+			res.clearCookie("refreshToken", {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === "production",
+				sameSite: "strict",
+			});
+
+			res.status(STATUS_CODES.OK).json({ message: "Logged out successfully" });
+		} catch (error) {
+			handleError(error, res);
+		}
+	},
 };

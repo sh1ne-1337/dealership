@@ -1,3 +1,4 @@
+/* global process, module */
 /** @type {import('sequelize').Options} */
 const config = {
 	development: {
